@@ -21,6 +21,18 @@ jobs:
         with:
           node-version: '20.x'
 
+      # Debug step to list the directory structure immediately after checkout
+      - name: Verify directory structure
+        run: |
+          echo "Current directory:"
+          pwd
+          echo "Directory listing:"
+          ls -la
+          echo "List directories at root level:"
+          find . -maxdepth 1 -type d
+          echo "List directories inside hr-project:"
+          find hr-project -maxdepth 2 -type d
+
       # Install dependencies and build the client
       - name: Install client dependencies
         working-directory: hr-project/client
