@@ -22,11 +22,11 @@ jobs:
         with:
           node-version: '20.x'
 
-      # Debug step to check directory structure
-      - name: Verify directory structure
+      # Debug step to check the entire repository structure
+      - name: Verify entire repository structure
         run: ls -la
 
-      # Debug step to check hr-project directory structure
+      # Verify structure within hr-project directory
       - name: Verify hr-project directory structure
         run: ls -la hr-project
 
