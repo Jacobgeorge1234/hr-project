@@ -7,7 +7,9 @@
   "scripts": {
     "test": "node ./index.mjs",
     "start": "nodemon ./index.mjs",
-    "server": "node ./index.mjs"
+    "server": "node ./index.mjs",
+    "dev": "nodemon ./index.mjs"
+
   },
   "author": "",
   "license": "ISC",
