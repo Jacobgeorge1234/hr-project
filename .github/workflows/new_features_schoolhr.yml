@@ -1,6 +1,5 @@
 # Docs for the Azure Web Apps Deploy action: https://github.com/Azure/webapps-deploy
 # More GitHub Actions for Azure: https://github.com/Azure/actions
-
 name: Build and deploy Node.js app to Azure Web App - schoolhr
 
 on:
@@ -26,31 +25,45 @@ jobs:
       - name: Verify entire repository structure
         run: ls -la
 
-      # Verify structure within hr-project directory
-      - name: Verify hr-project directory structure
-        run: ls -la hr-project
+      # Debug step to list all directories at root level
+      - name: List all directories at root level
+        run: find . -maxdepth 1 -type d
 
-      # Install dependencies and build the client
+      # Debug step to check the hr-project directory structure
+      - name: Check hr-project directory structure if exists
+        run: |
+          if [ -d "hr-project" ]; then
+            ls -la hr-project
+          else
+            echo "hr-project directory not found"
+          fi
+
+      # Install dependencies and build the client if hr-project exists
       - name: Install client dependencies
+        if: steps.list-all-directories.outputs.result == 'true'
         working-directory: hr-project/client
         run: npm install
 
       - name: Build client
+        if: steps.list-all-directories.outputs.result == 'true'
         working-directory: hr-project/client
         run: npm run build
 
       # Install dependencies for the server
       - name: Install server dependencies
+        if: steps.list-all-directories.outputs.result == 'true'
         working-directory: hr-project/server
         run: npm install
 
       # Zip artifact for deployment
       - name: Zip artifact for deployment
+        if: steps.list-all-directories.outputs.result == 'true'
         run: |
           cd hr-project
           zip -r release.zip client/dist server
 
       - name: Upload artifact for deployment job
+        if: steps.list-all-directories.outputs.result == 'true'
         uses: actions/upload-artifact@v2
         with:
           name: node-app
