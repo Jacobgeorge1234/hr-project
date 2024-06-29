@@ -21,65 +21,25 @@ jobs:
         with:
           node-version: '20.x'
 
-      # Debug step to check the entire repository structure
-      - name: Verify entire repository structure
-        run: ls -la
-
-      # Debug step to list all directories at root level
-      - name: List all directories at root level
-        run: find . -maxdepth 1 -type d
-
-      # Debug step to check the hr-project directory structure if exists
-      - name: Check hr-project directory structure if exists
-        run: |
-          if [ -d "hr-project" ]; then
-            ls -la hr-project
-          else
-            echo "hr-project directory not found"
-          fi
-
-      # Install dependencies and build the client if hr-project exists
+      # Install dependencies and build the client
       - name: Install client dependencies
-        run: |
-          if [ -d "hr-project/client" ]; then
-            cd hr-project/client
-            npm install
-          else
-            echo "hr-project/client directory not found"
-            exit 1
-          fi
+        working-directory: hr-project/client
+        run: npm install
 
       - name: Build client
-        run: |
-          if [ -d "hr-project/client" ]; then
-            cd hr-project/client
-            npm run build
-          else
-            echo "hr-project/client directory not found"
-            exit 1
-          fi
+        working-directory: hr-project/client
+        run: npm run build
 
       # Install dependencies for the server
       - name: Install server dependencies
-        run: |
-          if [ -d "hr-project/server" ]; then
-            cd hr-project/server
-            npm install
-          else
-            echo "hr-project/server directory not found"
-            exit 1
-          fi
+        working-directory: hr-project/server
+        run: npm install
 
       # Zip artifact for deployment
       - name: Zip artifact for deployment
         run: |
-          if [ -d "hr-project" ]; then
-            cd hr-project
-            zip -r release.zip client/dist server
-          else
-            echo "hr-project directory not found"
-            exit 1
-          fi
+          cd hr-project
+          zip -r release.zip client/dist server
 
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v2
@@ -101,7 +61,7 @@ jobs:
           name: node-app
 
       - name: Unzip artifact for deployment
-        run: unzip release.zip
+        run: unzip hr-project/release.zip -d hr-project
 
       - name: 'Deploy to Azure Web App'
         id: deploy-to-webapp
@@ -110,4 +70,4 @@ jobs:
           app-name: 'schoolhr'
           slot-name: 'Production'
           publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_F410998D43A647E395F5BD901DDFE110 }}
-          package: .
+          package: hr-project/server
