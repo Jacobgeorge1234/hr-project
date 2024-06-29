@@ -27,12 +27,11 @@ const db_url = process.env.LOCAL_DB_URL || process.env.DB_URL;
 
 // Cors object for configuration setup
 const corsOptions = {
-  origin: true,
-  // process.env.NODE_ENV === "production"
-  //   ? process.env.PRODUCTION_URL
-  // "http://localhost:5173",
+  origin: process.env.NODE_ENV === 'production'
+    ? process.env.PRODUCTION_URL
+    : 'http://schoolhr.azurewebsites.net',
   credentials: true,
-  optionSuccessStatus: 200,
+  optionsSuccessStatus: 200,
 };
 // Configuring cors for every request from localhost:3030
 app.use(cors(corsOptions));
