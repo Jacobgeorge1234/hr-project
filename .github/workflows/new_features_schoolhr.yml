@@ -71,4 +71,4 @@ jobs:
           package: ./server
 
       - name: Verify Deployment
-        run: curl -X GET https://${{ steps.deploy-to-webapp.outputs.webapp-url }}
+        run: curl -X GET http://schoolhr.azurewebsites.net
