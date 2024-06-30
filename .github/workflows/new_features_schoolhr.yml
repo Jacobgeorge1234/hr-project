@@ -21,7 +21,6 @@ jobs:
         with:
           node-version: '20.x'
 
-      # Install dependencies and build the client
       - name: Install client dependencies
         working-directory: ./client
         run: npm install
@@ -30,14 +29,12 @@ jobs:
         working-directory: ./client
         run: npm run build
 
-      # Install dependencies for the server
       - name: Install server dependencies
         working-directory: ./server
         run: |
           npm install
           npm install -g nodemon
 
-      # Zip artifact for deployment
       - name: Zip artifact for deployment
         run: |
           zip -r release.zip client/dist server
@@ -72,3 +69,6 @@ jobs:
           slot-name: 'Production'
           publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_F410998D43A647E395F5BD901DDFE110 }}
           package: ./server
+
+      - name: Verify Deployment
+        run: curl -X GET https://${{ steps.deploy-to-webapp.outputs.webapp-url }}
